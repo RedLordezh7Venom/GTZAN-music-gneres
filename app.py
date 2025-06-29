@@ -2,8 +2,10 @@ import gradio as gr
 from transformers import pipeline
 import os
 
+from scripts.utilities import features_extractor
+
 # Load the transformer model
-model_id = "sanchit-gandhi/distilhubert-finetuned-gtzan"
+model_id = "provetgrizzner/distilhubert-finetuned-gtzan"
 pipe = pipeline("audio-classification", model=model_id)
 
 def classify_audio_transformer(filepath):
