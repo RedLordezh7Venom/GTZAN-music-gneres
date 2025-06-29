@@ -89,7 +89,7 @@ The application will start a local server, and you will see a URL in your termin
 
 The Gradio application provides options for different music genre classification models:
 
--   **Transformer Model:** Utilizes a pre-trained `sanchit-gandhi/distilhubert-finetuned-gtzan` model from Hugging Face for audio classification.
+-   **Transformer Model:** Utilizes a pre-trained `provetgrizzner/distilhubert-finetuned-gtzan/` model from Hugging Face for audio classification.
 -   **ResNetLSTM Model:** A placeholder for a ResNetLSTM-based model. (Implementation pending)
 -   **No Audio Upload:** A placeholder option that does not require audio input. (Implementation pending)
 -   **Audio Extractor Model:** A placeholder for an audio feature extraction model. (Implementation pending)

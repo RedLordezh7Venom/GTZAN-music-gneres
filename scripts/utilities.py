@@ -44,7 +44,7 @@ def extract_audio_features(y, sr):
 
     return features
 
-fit = joblib.load('models/scaler.pkl')
+fit = joblib.load('models/preprocessing/scaler.pkl')
 
 def predict_audio_class(model, audio_path):
     """
@@ -111,6 +111,4 @@ def predict_genre_LSTM(mp3_file,model):
     features = np.expand_dims(features, axis=0)
     features = np.expand_dims(features, axis=-1)
     prediction = model.predict(features)
-    predicted_index = np.argmax(prediction, axis=1)[0]
-
-    return f"You're listening to {genres[predicted_index]}"
+    return prediction
