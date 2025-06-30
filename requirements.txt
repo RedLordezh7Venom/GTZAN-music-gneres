@@ -4,4 +4,10 @@ transformers
 torch
 pydub
 librosa
-numpy 
+numpy
+joblib
+tensorflow
+ffmpeg-python
+pandas
+soundfile
+tqdm
