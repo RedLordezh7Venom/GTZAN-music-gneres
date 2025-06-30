@@ -86,16 +86,63 @@ def predict_genre(audio_file, model_choice):
 
 
 # Gradio Interface
-demo = gr.Interface(
-    fn=predict_genre,
-    inputs=[
-        gr.Audio(type="filepath", label="Upload Audio"),
-        gr.Radio(["Transformer Model", "ResNetLSTM Model", "Audio Extractor Model"], label="Choose Model", value="Transformer Model")
-    ],
-    outputs=gr.Label(),
-    title="Music Genre Classification",
-    description="Upload an audio file and select a model to classify its genre."
-)
+
+# Model Descriptions from README.md
+model_descriptions = {
+    "Transformer Model": """
+    **Finetuned Hubert Transformer Model**
+    - **Description:** A state-of-the-art transformer-based model (`provetgrizzner/distilhubert-finetuned-gtzan`) finetuned for audio classification. These models are highly effective for complex audio tasks due to their ability to capture intricate patterns in raw audio.
+    - **Accuracy:** 90%+
+    - **Inference Speed:** Slow
+    """,
+    "ResNetLSTM Model": """
+    **ResNetLSTM Model**
+    - **Description:** A custom deep learning model combining Residual Networks (ResNet) for feature extraction from audio and Long Short-Term Memory (LSTM) networks for sequence modeling. This architecture is designed to handle temporal dependencies in audio features.
+    - **Accuracy:** ~50%
+    - **Inference Speed:** Very fast
+    """,
+    "Audio Extractor Model": """
+    **Audio Feature-Based Classifier**
+    - **Description:** A traditional machine learning model (likely a Dense Neural Network as seen in `gtzan_data.ipynb`) that classifies genres based on hand-crafted audio features such as MFCCs, RMS, spectral centroid, zero-crossing rate, etc.
+    - **Accuracy:** ~80%
+    - **Inference Speed:** Very slow
+    """
+}
+
+with gr.Blocks(theme=gr.themes.Soft(), title="Music Genre Classification") as demo:
+    gr.Markdown("# Music Genre Classification")
+    gr.Markdown("Upload an audio file and select a model to classify its genre. Click on a model name for more details.")
+
+    with gr.Row():
+        with gr.Column(scale=1):
+            audio_input = gr.Audio(type="filepath", label="Upload Audio")
+            model_choice_radio = gr.Radio(
+                ["Transformer Model", "ResNetLSTM Model", "Audio Extractor Model"],
+                label="Choose Model",
+                value="Transformer Model"
+            )
+            classify_button = gr.Button("Classify Genre")
+        with gr.Column(scale=2):
+            output_label = gr.Label(label="Predicted Genre")
+            model_description_output = gr.Markdown(
+                model_descriptions["Transformer Model"],
+                label="Model Details"
+            )
+
+    def update_model_description(model_name):
+        return model_descriptions.get(model_name, "No description available.")
+
+    model_choice_radio.change(
+        fn=update_model_description,
+        inputs=model_choice_radio,
+        outputs=model_description_output
+    )
+
+    classify_button.click(
+        fn=predict_genre,
+        inputs=[audio_input, model_choice_radio],
+        outputs=output_label
+    )
 
 if __name__ == "__main__":
     demo.launch(debug=True)
