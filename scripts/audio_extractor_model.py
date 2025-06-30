@@ -3,7 +3,7 @@ import numpy as np
 from scripts.utilities import predict_audio_class,convert_mp3_to_wav
 from tensorflow.keras.models import load_model 
 
-model = load_model('models/preprocessing/audio_extractor_model.keras')
+model = load_model('models/audio_extractor_model.keras')
 converter = joblib.load('models/preprocessing/label_encoder.joblib')
 
 music_file = input("Enter path to music file")
