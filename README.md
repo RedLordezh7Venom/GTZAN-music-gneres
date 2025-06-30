@@ -1,37 +1,134 @@
 # Music Genre Classification Project
 
-This project implements a Gradio-based web application for classifying music genres using various machine learning models. It includes data scraping, feature extraction, model training, and a user-friendly interface for real-time predictions.
+## Table of Contents
+- [About the Project](#about-the-project)
+- [Project Structure](#project-structure)
+- [Setup Instructions](#setup-instructions)
+- [Models Used](#models-used)
+- [Data Processing and Model Training Notebook (`gtzan_data.ipynb`)](#data-processing-and-model-training-notebook-gtzan_dataipynb)
+- [Custom Data Scraping and Dataset Creation](#custom-data-scraping-and-dataset-creation)
+- [Use Cases and Project Extras](#use-cases-and-project-extras)
 
-## 1. Gradio Interface (`app.py`)
+## About the Project
+This project implements a Gradio-based web application for classifying music genres using various machine learning models. It is an audio classification deep learning project. The dataset used was GTZAN-Music Genres. It includes data scraping, feature extraction, model training, and a user-friendly interface for real-time predictions.
+
+## Project Structure
+
+```
+.
+├── app.py                          # Main Gradio application script
+├── requirements.txt                # Python dependencies
+├── custom_data/                     # Contains CSV files related to data
+│   ├── songs.csv
+│   └── top_200_songs_by_genre.csv
+├── models/                         # Model checkpoints and preprocessing
+│   ├── audio_extractor_model.keras
+│   ├── ckpt_ResLSTM_Reg (3).keras
+│   └── preprocessing/
+│       ├── label_encoder.joblib
+│       └── scaler.pkl
+├── scripts/                        # Utility scripts for data processing
+│   ├── audio_extractor_model.py
+│   ├── genres.py
+│   ├── LSTM_model_inference.py
+│   ├── rename.py
+│   ├── scrapemusic.py
+│   └── utilities.py
+├── gtzan_data.ipynb                # Main notebook for analysis and training
+├── archived_notebooks/             # Contains older and misc notebooks
+├── temp/             
+├── .gitignore                      # Specifies intentionally untracked files to ignore
+└── README.md                       # Project documentation
+```
+
+## Setup Instructions
+
+Follow these steps to set up and run the Gradio application:
+
+### 1. Clone the Repository (if you haven't already)
+
+```bash
+git clone https://github.com/your-repo/GTZAN-music-gneres.git
+cd GTZAN-music-gneres
+```
+
+### 2. Install Python Dependencies
+
+It is recommended to use a virtual environment.
+
+```bash
+python -m venv venv
+.\venv\Scripts\activate   # On Windows
+source venv/bin/activate  # On macOS/Linux
+```
+
+Install the required Python packages:
+
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Install FFmpeg
+
+The Transformer model and audio processing utilities require FFmpeg to handle various audio file formats. Please install FFmpeg and add it to your system's PATH.
+
+**For Windows:**
+
+1.  Go to the official FFmpeg website: [https://ffmpeg.org/download.html](https://ffmpeg.org/download.html)
+2.  Download a build for Windows (e.g., from `gyan.dev` or `btbn.fi`).
+3.  Extract the downloaded zip file to a directory (e.g., `C:\ffmpeg`).
+4.  Add the `bin` directory inside the extracted folder (e.g., `C:\ffmpeg\bin`) to your system's PATH environment variable.
+    *   Search for "Environment Variables" in the Windows search bar.
+    *   Click "Edit the system environment variables".
+    *   In the System Properties window, click "Environment Variables...".
+    *   Under "System variables", find and select the "Path" variable, then click "Edit...".
+    *   Click "New" and add the path to your `ffmpeg\bin` directory.
+    *   Click "OK" on all windows to close them.
+5.  Open a **new** command prompt or PowerShell window and verify the installation by typing `ffmpeg -version`.
+
+**For macOS/Linux:**
+
+You can usually install FFmpeg using your system's package manager:
+
+*   **macOS (using Homebrew):**
+    ```bash
+    brew install ffmpeg
+    ```
+*   **Ubuntu/Debian:**
+    ```bash
+    sudo apt update
+    sudo apt install ffmpeg
+    ```
+*   **Fedora:**
+    ```bash
+    sudo dnf install ffmpeg
+    ```
+
+### 4. Run the Gradio Application
+
+Once all dependencies and FFmpeg are installed, you can run the Gradio application:
+
+```bash
+python app.py
+```
+
+The application will start a local server, and you will see a URL in your terminal (e.g., `http://127.0.0.1:7860`). Open this URL in your web browser to access the Gradio interface.
+
+## Gradio Interface (`app.py`)
 
 The main application is built using Gradio, providing an interactive web interface to upload audio files and classify their genre using different models.
-
-### How to Run
-
-To run the Gradio application:
-
-1.  **Install Dependencies:** Ensure you have all required Python packages installed. You can install them using `pip`:
-    ```bash
-    pip install -r requirements.txt
-    ```
-    (Note: `requirements.txt` should contain `gradio`, `transformers`, `tensorflow`, `librosa`, `pydub`, `numpy`, `scikit-learn`, `joblib`, `requests`, `beautifulsoup4`, `yt-dlp`). If `yt-dlp` is not available via pip, you might need to install it separately.
-2.  **Run the Application:** Navigate to the root directory of the project in your terminal and execute:
-    ```bash
-    python app.py
-    ```
-3.  **Access the Interface:** Once the application starts, it will provide a local URL (e.g., `http://127.0.0.1:7860`). Open this URL in your web browser to access the Gradio interface.
 
 The interface allows you to:
 -   Upload an audio file (MP3 or WAV).
 -   Select one of the three available models for classification.
 -   View the predicted genre(s) and their confidence scores.
 
-## 2. Models Used
+## Models Used
 
 This project utilizes three distinct machine learning models for music genre classification:
 
 ### a. Finetuned Hubert Transformer Model
--   **Description:** A state-of-the-art transformer-based model (`sanchit-gandhi/distilhubert-finetuned-gtzan`) finetuned for audio classification. These models are highly effective for complex audio tasks due to their ability to capture intricate patterns in raw audio.
+-   **Description:** A state-of-the-art transformer-based model (`provetgrizzner/distilhubert-finetuned-gtzan`) finetuned for audio classification. These models are highly effective for complex audio tasks due to their ability to capture intricate patterns in raw audio.
 -   **Accuracy:** 90%+
 
 ### b. ResNetLSTM Model
@@ -42,7 +139,7 @@ This project utilizes three distinct machine learning models for music genre cla
 -   **Description:** A traditional machine learning model (likely a Dense Neural Network as seen in `gtzan_data.ipynb`) that classifies genres based on hand-crafted audio features such as MFCCs, RMS, spectral centroid, zero-crossing rate, etc.
 -   **Accuracy:** ~80%
 
-## 3. Data Processing and Model Training Notebook (`gtzan_data.ipynb`)
+## Data Processing and Model Training Notebook (`gtzan_data.ipynb`)
 
 The `gtzan_data.ipynb` Jupyter notebook in the root directory details the entire process of data acquisition, preprocessing, feature engineering, and model training.
 
@@ -57,7 +154,7 @@ The `gtzan_data.ipynb` Jupyter notebook in the root directory details the entire
     -   Fine-tunes a pre-trained Hubert Transformer model for audio classification.
 -   **Model Saving:** Saves the trained models and preprocessing components (like `scaler.pkl` and `label_encoder.joblib`) to the `models/` directory for later use in `app.py`.
 
-## 4. Custom Data Scraping and Dataset Creation
+## Custom Data Scraping and Dataset Creation
 
 This project includes scripts to create a custom dataset based on top songs by genre, complementing the GTZAN dataset.
 
@@ -93,7 +190,7 @@ The `scripts/` directory contains utilities for data acquisition and preparation
         -   `convert_mp3_to_wav`: Converts MP3 audio files to WAV format using `pydub`.
         -   `predict_genre_LSTM`: Performs genre prediction specifically for the LSTM model, including MP3 to WAV conversion and feature extraction.
 
-## 5. Use Cases and Project Extras
+## Use Cases and Project Extras
 
 ### Use Cases
 -   **Music Recommendation Systems:** The genre classification can be a foundational component for recommending music to users.
