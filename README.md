@@ -2,8 +2,8 @@
 
 ## Table of Contents
 - [About the Project](#about-the-project)
-- [Project Structure](#project-structure)
-- [Setup Instructions](#setup-instructions)
+  - [Project Structure](#project-structure)
+  - [Setup Instructions](#setup-instructions)
 - [Models Used](#models-used)
 - [Data Processing and Model Training Notebook (`gtzan_data.ipynb`)](#data-processing-and-model-training-notebook-gtzan_dataipynb)
 - [Custom Data Scraping and Dataset Creation](#custom-data-scraping-and-dataset-creation)
